@@ -89,7 +89,7 @@ Exist a few ways for attaching attributes:
         ];
     }
 ```
-List of attributes:
+List of attributes, basic:
 ```php
     /**
      *  @return [] behaviors
