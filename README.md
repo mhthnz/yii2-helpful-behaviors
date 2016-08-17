@@ -42,13 +42,13 @@ Attach behavior to your model:
      */
     public function behaviors()
     {
-	return [
-            'imageBehavior' => [
-                'class' => \path\to\ImageBehavior::className(),
-                'imageAttribute' => 'image',  //Attribute of model which using to upload image
-                'uploadPath' => '@webroot/uploads',  //Path to upload dir
-                'uploadUrl' => '@web/uploads',  //Url to upload dir	
-            ],
+    	return [
+                'imageBehavior' => [
+                    'class' => \path\to\ImageBehavior::className(),
+                    'imageAttribute' => 'image',  //Attribute of model which using to upload image
+                    'uploadPath' => '@webroot/uploads',  //Path to upload dir
+                    'uploadUrl' => '@web/uploads',  //Url to upload dir	
+                ],
         ];
     }
 ```
@@ -73,38 +73,38 @@ echo $model->imagePath; //returned path of current image
 # Yii2 - DateToTimestamp
 Behavior for automatically change date to timestamp and back. It allows you to store the date in the timestamp format, and show in the desired format.
 #How to use
-Exist a few ways for attaching attributes:
+Exist a few ways for attaching attributes, basic:
 ```php
     /**
      *  @return [] behaviors
      */
     public function behaviors()
     {
-	return [
+        return [
             'DateToTimestampBehavior' => [
                 'class' => \path\to\DateToTimestampBehavior::className(),
-		'attributes' => 'delivery_date', // Attribute of model with date format
-		'format' => 'M/d/Y', // Format for convert
+                'attributes' => 'delivery_date', // Attribute of model with date format
+                'format' => 'M/d/Y', // Format for convert
             ],
         ];
     }
 ```
-List of attributes, basic:
+List of attributes:
 ```php
     /**
      *  @return [] behaviors
      */
     public function behaviors()
     {
-	return [
+        return [
             'DateToTimestampBehavior' => [
                 'class' => \path\to\DateToTimestampBehavior::className(),
-		'attributes' => [
-			'delivery_date',
-			'schedule_date',
-			'register_date',
-		],
-		'format' => 'M/d/Y', // Format for convert
+                'attributes' => [
+                    'delivery_date',
+                    'schedule_date',
+                    'register_date',
+                ],
+                'format' => 'M/d/Y', // Format for convert
             ],
         ];
     }
@@ -116,22 +116,22 @@ Customize some attributes:
      */
     public function behaviors()
     {
-	return [
+        return [
             'DateToTimestampBehavior' => [
                 'class' => \path\to\DateToTimestampBehavior::className(),
-		'attributes' => [
-			'delivery_date',
-			[
-				'attribute' => 'schedule_date',
-				'format' => 'Y.m.d H:i',
-			],
-			'register_date',
-			[
-				'attribute' => 'birth_date',
-				'format' => 'd M',
-			],
-		],
-		'format' => 'M/d/Y', // Format for convert
+                'attributes' => [
+                    'delivery_date',
+                    [
+                        'attribute' => 'schedule_date',
+                        'format' => 'Y.m.d H:i',
+                    ],
+                    'register_date',
+                    [
+                        'attribute' => 'birth_date',
+                        'format' => 'd M',
+                    ],
+                ],
+                'format' => 'M/d/Y', // Format for convert
             ],
         ];
     }
