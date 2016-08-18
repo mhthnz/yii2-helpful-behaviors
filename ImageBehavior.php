@@ -1,4 +1,5 @@
 <?php
+
 namespace app\behaviors;
 use Yii;
 use yii\db\ActiveRecord;
@@ -8,7 +9,7 @@ use yii\web\UploadedFile;
 /**
  *  Behavior for uploading image
  *  @author Mhthnz
- *  @version 1.0.0
+ *  @version 1.0.1
  */
 class ImageBehavior extends Behavior
 {
@@ -51,6 +52,7 @@ class ImageBehavior extends Behavior
             ActiveRecord::EVENT_BEFORE_UPDATE => 'settingImageFilename',
             ActiveRecord::EVENT_AFTER_INSERT => 'saveImage',
             ActiveRecord::EVENT_AFTER_UPDATE => 'saveImage',
+            ActiveRecord::EVENT_AFTER_DELETE => 'deleteImage',
         ];
     }
 
@@ -105,6 +107,17 @@ class ImageBehavior extends Behavior
     }
 
     /**
+     *  Remove image 
+     */
+    public function deleteImage($event)
+    {   
+        $imagePath = Yii::getAlias($this->_uploadPath . '/' . $this->_oldImage);
+        if (is_file($imagePath)) {
+            unlink($imagePath);
+        }
+    }
+
+    /**
      *  Save Uload instance and generate filename
      */
     public function settingImageFilename($event)
@@ -148,4 +161,4 @@ class ImageBehavior extends Behavior
         }        
         return Yii::getAlias($this->_uploadPath . '/' . $this->owner->image);
     }
-}
+}   
