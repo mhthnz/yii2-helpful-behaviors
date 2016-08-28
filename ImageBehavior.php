@@ -9,7 +9,7 @@ use yii\web\UploadedFile;
 /**
  *  Behavior for uploading image
  *  @author Mhthnz
- *  @version 1.0.1
+ *  @version 1.0.2
  */
 class ImageBehavior extends Behavior
 {
@@ -85,7 +85,7 @@ class ImageBehavior extends Behavior
      */
     public function afterFind($event)
     {
-        $this->_oldImage = $this->owner->image;
+        $this->_oldImage = $this->owner->{$this->_imageAttribute};
 
     }
 
@@ -96,8 +96,8 @@ class ImageBehavior extends Behavior
     {
         if ($this->_image instanceof UploadedFile) {
             $path = Yii::getAlias($this->_uploadPath);
-            if ($this->_image->saveAs($path . '/' . $this->owner->image)) {
-                Yii::trace('Save image to: ' . $path . '/' . $this->owner->image);
+            if ($this->_image->saveAs($path . '/' . $this->owner->{$this->_imageAttribute})) {
+                Yii::trace('Save image to: ' . $path . '/' . $this->owner->{$this->_imageAttribute});
             }
             if (is_file($path . '/' . $this->_oldImage)) {
                 unlink($path . '/' . $this->_oldImage);
@@ -121,12 +121,12 @@ class ImageBehavior extends Behavior
      *  Save Uload instance and generate filename
      */
     public function settingImageFilename($event)
-    {   
-        if ($this->owner->image instanceof UploadedFile) {
-            $this->_image = $this->owner->image;
-            $this->owner->image = Yii::$app->getSecurity()->generateRandomString() . '.' . $this->_image->extension;
+    {
+        if ($this->owner->{$this->_imageAttribute} instanceof UploadedFile) {
+            $this->_image = $this->owner->{$this->_imageAttribute};
+            $this->owner->{$this->_imageAttribute} = Yii::$app->getSecurity()->generateRandomString() . '.' . $this->_image->extension;
         } else {
-            $this->owner->image = $this->_oldImage;
+            $this->owner->{$this->_imageAttribute} = $this->_oldImage;
         }
     }
 
@@ -135,7 +135,9 @@ class ImageBehavior extends Behavior
      */
     public function beforeValidate($event)
     {
-        $this->owner->image = UploadedFile::getInstance($this->owner, $this->_imageAttribute);
+        if (in_array($this->_imageAttribute, $this->owner->safeAttributes())) {
+            $this->owner->{$this->_imageAttribute} = UploadedFile::getInstance($this->owner, $this->_imageAttribute) !== null ? UploadedFile::getInstance($this->owner, $this->_imageAttribute) : UploadedFile::getInstanceByName($this->_imageAttribute);
+        }
     }
 
     /**
@@ -144,10 +146,10 @@ class ImageBehavior extends Behavior
      */
     public function getImageUrl()
     {
-        if ($this->owner->image === null) {
+        if ($this->owner->{$this->_imageAttribute} === null) {
             return null;
         }
-        return Yii::getAlias($this->_uploadUrl . '/' . $this->owner->image);
+        return Yii::getAlias($this->_uploadUrl . '/' . $this->owner->{$this->_imageAttribute});
     }
 
     /**
@@ -156,9 +158,9 @@ class ImageBehavior extends Behavior
      */
     public function getImagePath()
     {
-        if ($this->owner->image === null) {
+        if ($this->owner->{$this->_imageAttribute} === null) {
             return null;
         }        
-        return Yii::getAlias($this->_uploadPath . '/' . $this->owner->image);
+        return Yii::getAlias($this->_uploadPath . '/' . $this->owner->{$this->_imageAttribute});
     }
 }   
